@@ -1,0 +1,149 @@
+import sqlite3
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+import tkinter as tk
+
+
+urlDB = 'C:\\Users\\маё име\\Desktop\\PractikUch411\\finance.db'
+
+
+connec = sqlite3.connect(urlDB)
+cursorr = connec.cursor()
+
+
+# хотел вручную создать таблицу с колоннами
+# cursorr.execute(
+#    """CREATE TABLE IF NOT EXISTS finances(name TEXT PRIMARY KEY,count INT,currency TEXT,cours_CB_RF FLOAT,changes FLOAT);""")
+# connec.commit()
+
+url = 'https://www.banki.ru/products/currency/cb/'
+
+page = requests.get(url)
+
+soup = BeautifulSoup(page.text, 'html.parser')
+
+
+table1 = soup.find(
+    'table', {'class': 'standard-table standard-table--row-highlight'})
+
+
+headers = []
+
+for i in table1.find_all('th'):
+    title = i.text
+    headers.append(title)
+
+mydata = pd.DataFrame(columns=headers)
+for j in table1.find_all('tr')[1:]:
+    row_data = j.find_all('td')
+    row = [i.text for i in row_data]
+    length = len(mydata)
+    mydata.loc[length] = row
+
+# потыкался, понял что не удобно и много думать, чтобы самому заполнять,  оказывается етсть mydata.to_sql('finance', connec, if_exists='replace', index=False) pd.read_sql('select * from finance', connec) которая все проблемы решит и дум ать не надо
+
+# print(mydata)
+# print(mydata['Изменение'].loc[mydata.index[33]]) Index(['Код', 'Единиц', 'Валюта', 'Курс ЦБ РФ', 'Изменение']
+
+# for rows in mydata['Валюта']:
+#    print(rows)
+
+# cursorr.execute("""INSERT INTO finances(name,count,currency,cours_CB_RF,changes)
+#    VALUES('рУС',1,'РУБЛЯ',50.21442,001.444);""")
+# connec.commit()
+
+
+# cursorr.execute("""INSERT INTO finances(name,count,currency,cours_CB_RF,changes) """)
+
+
+# витя подсказал, что через стрип можно убить всякие лишние теги после парсинга /t, /n и пробелы
+mydata['Код'] = mydata['Код'].str.strip()
+mydata['Валюта'] = mydata['Валюта'].str.strip()
+mydata['Изменение'] = mydata['Изменение'].str.strip()
+
+mydata.to_sql('finance', connec, if_exists='replace', index=False)
+
+pd.read_sql('select * from finance', connec)
+
+
+# print(mydata) всё теперь данные чистые и запарсены в бд. начинаем интерфейс
+
+class GuiLog:
+
+    mainLog = "1"
+    mainPas = '1'
+
+    def __init__(self):
+
+        def checkLogin(event):
+
+            log = entryLogin.get()
+            log = log.split()
+            pas = entryPass.get()
+            pas = pas.split()
+
+            if log and pas != '' and log[0] == GuiLog.mainLog and pas[0] == GuiLog.mainPas:
+                self.root.destroy()
+                mainInterface()
+            else:
+                labelErrLof['text'] = "Ошибка ввода данных"
+
+        self.root = tk.Tk()
+
+        opts = {'ipadx': 10, 'ipady': 10}
+        self.root.title("Финансы Сухопаров, Закаблук. 19ПК11")
+        # ИНТЕРФЕЙС
+
+        labelLogin = tk.Label(self.root, text="Введите логин")
+        entryLogin = tk.Entry(self.root)
+
+        labelPass = tk.Label(self.root, text="Введите пароль: ")
+        entryPass = tk.Entry(self.root)
+
+        labelErrLof = tk.Label(self.root, text="")
+
+        buttonLog = tk.Button(self.root, text="Войти")
+
+        myFrame = tk.Frame(self.root)
+        myFrame.columnconfigure(0, weight=1)
+        myFrame.columnconfigure(1, weight=1)
+        myFrame.rowconfigure(2, weight=1)
+
+        # СОЕДИНЕНИЕ С ФУНКЦИЯМИ
+        buttonLog.bind("<Button-1>", checkLogin)
+
+        # РАСПОЛОЖЕНИЕ возможно не всё есть в интерефейся
+
+        labelLogin.grid(row=0, column=0)
+        entryLogin.grid(row=0, column=1)
+        labelPass.grid(row=1, column=0)
+        entryPass.grid(row=1, column=1)
+        labelErrLof.grid(row=2, column=0, columnspan=2)
+        buttonLog.grid(row=3, column=0, columnspan=2)
+
+        # labelLogin.pack(**opts)
+        # entryLogin.pack(**opts)
+
+        self.root.mainloop()
+
+
+class mainInterface(tk.Frame):
+    def __init__(self, parent=None):
+
+        self.root2 = tk.Tk()
+
+        self.parent = parent
+        tk.Frame.__init__(self)
+        self.main = self.master
+        f = tk.Frame(self.main)
+
+        f.pack(fill='both', expand=1)
+
+        text = tk.Text(self)
+        text.insert(tk.END, str(mydata.iloc[:6, 1:2]))
+        text.pack()
+        self.root2.mainloop()
+
+
+GuiLog()

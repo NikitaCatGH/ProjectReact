@@ -1,0 +1,45 @@
+import sqlite3
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+
+urlDB = 'C:\\Users\\маё име\\Desktop\\PractikUch411\\finance.db'
+exelpath = 'C:\\Users\\маё име\\Desktop\\Для учебной практики.xlsx'
+
+connec = sqlite3.connect(urlDB)
+cursorr = connec.cursor()
+
+cursorr.execute(
+    """CREATE TABLE IF NOT EXISTS finances(name TEXT PRIMARY KEY,count INT,currency TEXT,cours_CB_RF FLOAT,changes FLOAT);""")
+connec.commit()
+
+url = 'https://www.banki.ru/products/currency/cb/'
+
+page = requests.get(url)
+
+soup = BeautifulSoup(page.text, 'html.parser')
+
+
+table1 = soup.find(
+    'table', {'class': 'standard-table standard-table--row-highlight'})
+
+
+headers = []
+
+for i in table1.find_all('th'):
+    title = i.text
+    headers.append(title)
+
+mydata = pd.DataFrame(columns=headers)
+for j in table1.find_all('tr')[1:]:
+    row_data = j.find_all('td')
+    row = [i.text for i in row_data]
+    length = len(mydata)
+    mydata.loc[length] = row
+
+print(mydata)
+
+
+# cursorr.execute("""INSERT INTO finances(name,count,currency,cours_CB_RF,changes)
+#    VALUES('рУС',1,'РУБЛЯ',50.21442,001.444);""")
+# connec.commit()
