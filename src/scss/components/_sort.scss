@@ -19,7 +19,14 @@
       border-bottom: 1px dashed $orange;
       cursor: pointer;
     }
+    &__changeArrow {
+      margin-left: 10px;
+      border: 0;
+      background: local;
+    }
   }
+
+ 
 
   &__popup {
     position: absolute;

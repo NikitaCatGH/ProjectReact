@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 
-export default function Sort() {
+export default function Sort({ type, onClickSort, onClickArrow }) {
+    console.log(type);
     const [openPopUp, setOpenPopUp] = useState(false);
-    const [aimListPos, setAimListPos] = React.useState(0);
+    //const [aimListPos, setAimListPos] = React.useState(0);
 
-    const listMenu = ["популярности", "цене", "алфавитcsdfds"];
-
-    const sortName = listMenu[aimListPos];
+    const listMenu = [
+        { name: "популярности", sort: "rating" },
+        { name: "цене", sort: "price" },
+        { name: "алфавиту", sort: "title" },
+    ];
 
     return (
         <div className="sort">
@@ -24,7 +27,17 @@ export default function Sort() {
                     />
                 </svg>
                 <b>Сортировка по:</b>
-                <span onClick={() => setOpenPopUp(!openPopUp)}>{sortName}</span>
+                <span onClick={() => setOpenPopUp(!openPopUp)}>
+                    {type.name}
+                </span>
+                <button
+                    className="sort__label__changeArrow"
+                    onClick={() => {
+                        onClickArrow();
+                    }}
+                >
+                    <span>⇅</span>
+                </button>
             </div>
             {openPopUp && (
                 <div className="sort__popup">
@@ -32,13 +45,15 @@ export default function Sort() {
                         {listMenu.map((obj, i) => (
                             <li
                                 key={obj + i}
-                                className={aimListPos === i ? "active" : ""}
+                                className={
+                                    type.sort === obj.sort ? "active" : ""
+                                }
                                 onClick={() => {
-                                    setAimListPos(i);
+                                    onClickSort(obj);
                                     setOpenPopUp(false);
                                 }}
                             >
-                                {obj}
+                                {obj.name}
                             </li>
                         ))}
                     </ul>

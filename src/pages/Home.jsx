@@ -5,10 +5,24 @@ import PizzaBlock from "../components/PizzaBlockFolder/PizzaBlock";
 import PizzaSkeleton from "../components/PizzaBlockFolder/Skeleton";
 
 export default function Home() {
-    const [isLoading, setIsLoading] = React.useState(true);
     const [items, setItems] = React.useState([]);
+    const [isLoading, setIsLoading] = React.useState(true);
+    const [categoryId, setCategoryId] = React.useState(0);
+    const [sortType, setSortType] = React.useState({
+        name: "популярности",
+        sort: "rating",
+    });
+    const [valueOfDesc, setValueOfDesc] = React.useState(true);
+
     React.useEffect(() => {
-        fetch("https://6396f0a886d04c7633854313.mockapi.io/items")
+        setIsLoading(true);
+        fetch(
+            `https://6396f0a886d04c7633854313.mockapi.io/items?${
+                categoryId > 0 ? `category=${categoryId}` : ""
+            }&sortBy=${sortType.sort}&order=${
+                valueOfDesc === true ? "desc" : "asc"
+            }`
+        )
             .then((response) => {
                 return response.json();
             })
@@ -16,26 +30,36 @@ export default function Home() {
                 setItems(json);
                 setIsLoading(false);
             });
-    }, []); //пустой массив значит вызвать при перерисовкие старинцы
+        window.scrollTo(0, 0);
+    }, [categoryId, sortType, valueOfDesc]); //пустой массив значит вызвать при перерисовкие старинцы
 
     return (
         <>
-            <div className="content__top">
-                <Categories />
-                <Sort />
-            </div>
-            <h2 className="content__title">Все пиццы</h2>
-            <div className="content__items">
-                {isLoading
-                    ? [...new Array(12)].map((_, index) => (
-                          <PizzaSkeleton key={index} />
-                      ))
-                    : items.map((pizza) => (
-                          <PizzaBlock
-                              {...pizza}
-                              key={pizza.id + pizza.imageUrl}
-                          />
-                      ))}
+            <div className="container">
+                <div className="content__top">
+                    <Categories
+                        value={categoryId}
+                        onClickCategory={(i) => setCategoryId(i)}
+                    />
+                    <Sort
+                        type={sortType}
+                        onClickSort={(id) => setSortType(id)}
+                        onClickArrow={() => setValueOfDesc(!valueOfDesc)}
+                    />
+                </div>
+                <h2 className="content__title">Все пиццы</h2>
+                <div className="content__items">
+                    {isLoading
+                        ? [...new Array(12)].map((_, index) => (
+                              <PizzaSkeleton key={index} />
+                          ))
+                        : items.map((pizza) => (
+                              <PizzaBlock
+                                  {...pizza}
+                                  key={pizza.id + pizza.imageUrl}
+                              />
+                          ))}
+                </div>
             </div>
         </>
     );
