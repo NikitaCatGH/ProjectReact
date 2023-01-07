@@ -3,8 +3,10 @@ import Categories from "../components/Categories";
 import Sort from "../components/Sort";
 import PizzaBlock from "../components/PizzaBlockFolder/PizzaBlock";
 import PizzaSkeleton from "../components/PizzaBlockFolder/Skeleton";
+import Pagination from "../components/Pagination/Pagination";
 
-export default function Home() {
+export default function Home({ searchValue }) {
+    console.log("home", searchValue);
     const [items, setItems] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(true);
     const [categoryId, setCategoryId] = React.useState(0);
@@ -33,6 +35,21 @@ export default function Home() {
         window.scrollTo(0, 0);
     }, [categoryId, sortType, valueOfDesc]); //пустой массив значит вызвать при перерисовкие старинцы
 
+    const pizzas = items
+        .filter((obj) => {
+            if (obj.title.toLowerCase().includes(searchValue.toLowerCase())) {
+                console.log(searchValue);
+                return true;
+            }
+
+            return false;
+        })
+        .map((obj) => <PizzaBlock {...obj} key={obj.id + obj.imageUrl} />);
+
+    const skeletons = [...new Array(12)].map((_, index) => (
+        <PizzaSkeleton key={index} />
+    ));
+
     return (
         <>
             <div className="container">
@@ -49,17 +66,9 @@ export default function Home() {
                 </div>
                 <h2 className="content__title">Все пиццы</h2>
                 <div className="content__items">
-                    {isLoading
-                        ? [...new Array(12)].map((_, index) => (
-                              <PizzaSkeleton key={index} />
-                          ))
-                        : items.map((pizza) => (
-                              <PizzaBlock
-                                  {...pizza}
-                                  key={pizza.id + pizza.imageUrl}
-                              />
-                          ))}
+                    {isLoading ? skeletons : pizzas}
                 </div>
+                <Pagination />
             </div>
         </>
     );

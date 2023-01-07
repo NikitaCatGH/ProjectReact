@@ -3,14 +3,36 @@
     @media(max-width: 440) {
         width:200px;
     }
+  
+    position: relative;
+    
 }
 
 .input {
-    width: 400px;
+    width: 320px;
     padding: 15px 5px;
+    padding-right: 30px;
     border-radius: 30px;
     border: 1px solid;
     margin:5px 10px;
 
+   
+
     
 }
+.clearIcon {
+    
+  
+        position: absolute;
+        margin-top: 25px;
+        margin-left: -40px;
+        opacity: 0.2;
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+        
+        &:hover {
+            opacity: 1;
+           }
+  
+} 

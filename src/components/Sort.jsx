@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 export default function Sort({ type, onClickSort, onClickArrow }) {
-    console.log(type);
+    //console.log(type);
     const [openPopUp, setOpenPopUp] = useState(false);
     //const [aimListPos, setAimListPos] = React.useState(0);
 

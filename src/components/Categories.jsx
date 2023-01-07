@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 export default function Categories({ value, onClickCategory }) {
-    console.log(value);
+    //  console.log(value);
 
     const categories = ["Все", "Мясные", "Вегетарианская", "Гриль", "Закрытые"];
 
