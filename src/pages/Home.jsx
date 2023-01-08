@@ -15,17 +15,28 @@ export default function Home({ searchValue }) {
         sort: "rating",
     });
     const [valueOfDesc, setValueOfDesc] = React.useState(true);
+    const [currentPage, setCurrentPage] = React.useState(1);
+
+    /// рассчет страниц
+    const pageLimit = 4;
+    const pageCountN = 3; // Но если бы мы получали количество страниц или всех айтамов, то могли бы посчитать
+    // /// рассчет страниц
+    // const pageCountN = Math.ceil(items.length / pageLimit);
+
+    // console.log("items", items);
+    // console.log("кол-во страниц", pageCountN);
 
     React.useEffect(() => {
         setIsLoading(true);
         fetch(
-            `https://6396f0a886d04c7633854313.mockapi.io/items?${
+            `https://6396f0a886d04c7633854313.mockapi.io/items?page=${currentPage}&limit=${pageLimit}&${
                 categoryId > 0 ? `category=${categoryId}` : ""
             }&sortBy=${sortType.sort}&order=${
                 valueOfDesc === true ? "desc" : "asc"
             }`
         )
             .then((response) => {
+                console.log("response", response);
                 return response.json();
             })
             .then((json) => {
@@ -33,7 +44,7 @@ export default function Home({ searchValue }) {
                 setIsLoading(false);
             });
         window.scrollTo(0, 0);
-    }, [categoryId, sortType, valueOfDesc]); //пустой массив значит вызвать при перерисовкие старинцы
+    }, [categoryId, sortType, valueOfDesc, currentPage]); //пустой массив значит вызвать при перерисовкие старинцы
 
     const pizzas = items
         .filter((obj) => {
@@ -68,7 +79,11 @@ export default function Home({ searchValue }) {
                 <div className="content__items">
                     {isLoading ? skeletons : pizzas}
                 </div>
-                <Pagination />
+                <Pagination
+                    pageLimit={pageLimit}
+                    pageCountN={pageCountN}
+                    setCurrentPage={(number) => setCurrentPage(number)}
+                />
             </div>
         </>
     );
