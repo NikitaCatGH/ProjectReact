@@ -1,8 +1,11 @@
 import React from "react";
+import { SearchContext } from "../../App";
 import styles from "./Search.module.scss";
 console.log(styles.input);
 
-export default function Search({ searchValue, setSearchValue }) {
+export default function Search() {
+    const { searchValue, setSearchValue } = React.useContext(SearchContext);
+
     console.log("searchJSX", searchValue);
     return (
         <div className="styles.root">
