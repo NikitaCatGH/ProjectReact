@@ -10,7 +10,7 @@ import Cart from "./pages/Cart";
 
 
 import { useSelector, useDispatch } from 'react-redux';
-import { decrement, increment } from './redux/slices/filter';
+
 
 
 export const SearchContext = React.createContext();
@@ -25,29 +25,11 @@ function App() {
   const dispatch = useDispatch();
 
   return (
-    <div className="App">
-
-      <div>
-        <div>
-          <button
-            aria-label="Increment value"
-            onClick={() => dispatch(increment())}
-          >
-            Increment
-          </button>
-          <span>{count}</span>
-          <button
-            aria-label="Decrement value"
-            onClick={() => dispatch(decrement())}
-          >
-            Decrement
-          </button>
-        </div>
-      </div>
 
 
 
-      {/* <SearchContext.Provider value={{ searchValue, setSearchValue }}>
+
+    {/* <SearchContext.Provider value={{ searchValue, setSearchValue }}>
         <div className="wrapper">
           <Header />
           <div className="content">
@@ -63,7 +45,7 @@ function App() {
         </div>
       </SearchContext.Provider> */}
 
-    </div>
+    </div >
 
   );
 }
