@@ -15,7 +15,6 @@ export default function Home() {
     const [items, setItems] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(true);
 
-    const [valueOfDesc, setValueOfDesc] = React.useState(true);
     const [currentPage, setCurrentPage] = React.useState(1);
 
     /// рассчет страниц
@@ -26,7 +25,7 @@ export default function Home() {
 
     // console.log("items", items);
     // console.log("кол-во страниц", pageCountN);
-
+    const valueOfDesc = useSelector((state) => state.filter.valueOfDesc);
     const { categoryId, sort } = useSelector((state) => {
         return state.filter;
     });
@@ -77,7 +76,7 @@ export default function Home() {
                         value={categoryId}
                         onClickCategory={(id) => dispatch(setCategoryId(id))}
                     />
-                    <Sort onClickArrow={() => setValueOfDesc(!valueOfDesc)} />
+                    <Sort />
                 </div>
                 <h2 className="content__title">Все пиццы</h2>
                 <div className="content__items">

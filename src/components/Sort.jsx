@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setSort } from "../redux/slices/filterSlice";
+import { setValueOfDesc } from "../redux/slices/filterSlice";
 
-export default function Sort({ onClickSort, onClickArrow }) {
+export default function Sort() {
     const dispatch = useDispatch();
     const type = useSelector((state) => state.filter.sort);
 
@@ -38,7 +39,7 @@ export default function Sort({ onClickSort, onClickArrow }) {
                 <button
                     className="sort__label__changeArrow"
                     onClick={() => {
-                        onClickArrow();
+                        dispatch(setValueOfDesc());
                     }}
                 >
                     <span>⇅</span>
