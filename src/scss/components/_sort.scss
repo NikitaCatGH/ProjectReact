@@ -4,6 +4,7 @@
   position: relative;
   &__label {
     display: flex;
+    
     align-items: center;
 
     svg {
@@ -41,7 +42,9 @@
 
     ul {
       overflow: hidden;
+      display: block;
       li {
+        
         padding: 12px 20px;
         cursor: pointer;
 

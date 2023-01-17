@@ -6,16 +6,15 @@ import PizzaSkeleton from "../components/PizzaBlockFolder/Skeleton";
 import Pagination from "../components/Pagination/Pagination";
 import { SearchContext } from "../App";
 
+import { useSelector, useDispatch } from "react-redux";
+import { setCategoryId } from "../redux/slices/filterSlice";
+
 export default function Home() {
     const { searchValue, setSearchValue } = React.useContext(SearchContext);
     console.log("home", searchValue);
     const [items, setItems] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(true);
-    const [categoryId, setCategoryId] = React.useState(0);
-    const [sortType, setSortType] = React.useState({
-        name: "популярности",
-        sort: "rating",
-    });
+
     const [valueOfDesc, setValueOfDesc] = React.useState(true);
     const [currentPage, setCurrentPage] = React.useState(1);
 
@@ -27,6 +26,13 @@ export default function Home() {
 
     // console.log("items", items);
     // console.log("кол-во страниц", pageCountN);
+
+    const { categoryId, sort } = useSelector((state) => {
+        return state.filter;
+    });
+    const sortType = sort;
+
+    const dispatch = useDispatch();
 
     React.useEffect(() => {
         setIsLoading(true);
@@ -69,13 +75,9 @@ export default function Home() {
                 <div className="content__top">
                     <Categories
                         value={categoryId}
-                        onClickCategory={(i) => setCategoryId(i)}
+                        onClickCategory={(id) => dispatch(setCategoryId(id))}
                     />
-                    <Sort
-                        type={sortType}
-                        onClickSort={(id) => setSortType(id)}
-                        onClickArrow={() => setValueOfDesc(!valueOfDesc)}
-                    />
+                    <Sort onClickArrow={() => setValueOfDesc(!valueOfDesc)} />
                 </div>
                 <h2 className="content__title">Все пиццы</h2>
                 <div className="content__items">

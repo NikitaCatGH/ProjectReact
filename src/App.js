@@ -21,15 +21,15 @@ function App() {
 
 
   //
-  const count = useSelector((state) => state.counter.count);
-  const dispatch = useDispatch();
+  //const count = useSelector((state) => state.counter.count);
+  //const dispatch = useDispatch();
 
   return (
 
 
 
-
-    {/* <SearchContext.Provider value={{ searchValue, setSearchValue }}>
+    <div className="App">
+      <SearchContext.Provider value={{ searchValue, setSearchValue }}>
         <div className="wrapper">
           <Header />
           <div className="content">
@@ -43,7 +43,7 @@ function App() {
 
           </div>
         </div>
-      </SearchContext.Provider> */}
+      </SearchContext.Provider>
 
     </div >
 

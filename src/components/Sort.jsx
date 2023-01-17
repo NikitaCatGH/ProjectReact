@@ -1,6 +1,11 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setSort } from "../redux/slices/filterSlice";
 
-export default function Sort({ type, onClickSort, onClickArrow }) {
+export default function Sort({ onClickSort, onClickArrow }) {
+    const dispatch = useDispatch();
+    const type = useSelector((state) => state.filter.sort);
+
     //console.log(type);
     const [openPopUp, setOpenPopUp] = useState(false);
     //const [aimListPos, setAimListPos] = React.useState(0);
@@ -49,7 +54,7 @@ export default function Sort({ type, onClickSort, onClickArrow }) {
                                     type.sort === obj.sort ? "active" : ""
                                 }
                                 onClick={() => {
-                                    onClickSort(obj);
+                                    dispatch(setSort(obj));
                                     setOpenPopUp(false);
                                 }}
                             >
