@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
 import PizzaBlock from "../components/PizzaBlockFolder/PizzaBlock";
@@ -35,21 +36,35 @@ export default function Home() {
 
     React.useEffect(() => {
         setIsLoading(true);
-        fetch(
-            `https://6396f0a886d04c7633854313.mockapi.io/items?page=${currentPage}&limit=${pageLimit}&${
-                categoryId > 0 ? `category=${categoryId}` : ""
-            }&sortBy=${sortType.sort}&order=${
-                valueOfDesc === true ? "desc" : "asc"
-            }`
-        )
-            .then((response) => {
-                console.log("response", response);
-                return response.json();
-            })
-            .then((json) => {
-                setItems(json);
+
+        axios
+            .get(
+                `https://6396f0a886d04c7633854313.mockapi.io/items?page=${currentPage}&limit=${pageLimit}&${
+                    categoryId > 0 ? `category=${categoryId}` : ""
+                }&sortBy=${sortType.sort}&order=${
+                    valueOfDesc === true ? "desc" : "asc"
+                }`
+            )
+            .then((res) => {
+                setItems(res.data);
                 setIsLoading(false);
             });
+
+        // fetch(
+        //     `https://6396f0a886d04c7633854313.mockapi.io/items?page=${currentPage}&limit=${pageLimit}&${
+        //         categoryId > 0 ? `category=${categoryId}` : ""
+        //     }&sortBy=${sortType.sort}&order=${
+        //         valueOfDesc === true ? "desc" : "asc"
+        //     }`
+        // )
+        //     .then((response) => {
+        //         console.log("response", response);
+        //         return response.json();
+        //     })
+        //     .then((json) => {
+        //         setItems(json);
+        //         setIsLoading(false);
+        //     });
         window.scrollTo(0, 0);
     }, [categoryId, sortType, valueOfDesc, currentPage]); //пустой массив значит вызвать при перерисовкие старинцы
 
@@ -64,7 +79,7 @@ export default function Home() {
         })
         .map((obj) => <PizzaBlock {...obj} key={obj.id + obj.imageUrl} />);
 
-    const skeletons = [...new Array(12)].map((_, index) => (
+    const skeletons = [...new Array(4)].map((_, index) => (
         <PizzaSkeleton key={index} />
     ));
 

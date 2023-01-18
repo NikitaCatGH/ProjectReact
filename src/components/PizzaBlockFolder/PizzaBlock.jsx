@@ -11,6 +11,7 @@ export default function PizzaBlock({
     const typeNames = ["тонкое", "традиционное"];
     const [activeType, setActiveType] = useState(0);
     const [activeSize, setActiveSize] = useState(0);
+    const [countPizzas, setCountPizzas] = useState(1);
 
     const setActiveFunc = (val) => {
         setActiveType(val);
@@ -51,7 +52,10 @@ export default function PizzaBlock({
                 </div>
                 <div className="pizza-block__bottom">
                     <div className="pizza-block__price">от {price} ₽</div>
-                    <div className="button button--outline button--add">
+                    <div
+                        className="button button--outline button--add"
+                        onClick={() => setCountPizzas(countPizzas + 1)}
+                    >
                         <svg
                             width="12"
                             height="12"
@@ -65,7 +69,7 @@ export default function PizzaBlock({
                             />
                         </svg>
                         <span>Добавить</span>
-                        <i>0</i>
+                        <i>{countPizzas}</i>
                     </div>
                 </div>
             </div>
